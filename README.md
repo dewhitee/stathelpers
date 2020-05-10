@@ -1,2 +1,2 @@
 # dev-python-stathelpers
-Helpers for python statistics.
+Helper functions and classes for python statistics.
