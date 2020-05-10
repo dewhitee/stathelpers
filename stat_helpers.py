@@ -17,7 +17,7 @@ def phi(x):
 def ccc(k, K, n, N):
     return (C(k, K) * C(n - k, N - K)) / C(n, N)
     
-class Bernulli:
+class Bernoulli:
     @staticmethod
     def get(p, k, n):
         return C(k, n) * pow(p, k) * pow((1-p), n-k)
