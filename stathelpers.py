@@ -1,3 +1,20 @@
+# -*- coding: utf-8 -*-
+"""
+Small library of helper functions for statistics.
+
+Includes classes:
+    * Bernoulli
+    * Bayes
+    * Moivre
+    * Poisson
+    * RandomVariation
+    * StandardDeviation
+    * MathExpectation
+    * NormalDistribution
+
+@author: DEWHITEE
+"""
+
 import math
 import scipy.integrate as integrate
 from scipy.stats import norm
