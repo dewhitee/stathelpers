@@ -50,7 +50,7 @@ class Bernoulli:
     
     """
     def __init__(self, p, k, n):
-        return Bernoulli.get(p, k, n)
+        self.out_val = Bernoulli.get(p, k, n)
     
     @staticmethod
     def get(p, k, n):
@@ -64,7 +64,7 @@ class Bayes:
     To get full (total) probability -- use get_ph(...) method.
     """
     def __init__(self, ah_list, h_list):
-        return Bayes.get(ah_list, h_list)
+        self.out_val = Bayes.get(ah_list, h_list)
     
     @staticmethod
     def get(ah_list, h_list):
@@ -109,7 +109,7 @@ class Moivre:
     Use this method if np > 9 and n > 20
     """
     def __init__(self, p, k, n):
-        return Moivre.get(p, k, n)
+        self.out_val = Moivre.get(p, k, n)
     @staticmethod
     def x(p, k, n):
         return (k - n * p)/(math.sqrt(n*p*(1-p)))
@@ -125,7 +125,7 @@ class Poisson:
     Use this method if np < 9 and n > 20
     """
     def __init__(self, p, k, n):
-        return Poisson.get(p, k, n)
+        self.out_val = Poisson.get(p, k, n)
     
     def get(p, k ,n):
         return ((pow((n*p),k) / math.factorial(k)) * pow(math.e, -n * p))
@@ -135,7 +135,7 @@ class RandomVariation:
     """
     """
     def __init__(self, arr):
-        return RandomVariation(arr)
+        self.out_val = RandomVariation(arr)
     
     @staticmethod
     def get(arr):
@@ -157,7 +157,7 @@ class StandardDeviation:
     """
     """
     def __init__(self, arr):
-        return StandardDeviation.get(arr)
+        self.out_val = StandardDeviation.get(arr)
     
     @staticmethod
     def get(arr):
@@ -165,9 +165,9 @@ class StandardDeviation:
 
 class MathExpectation:
     """
-    """
+    """  
     def __init__(self, arr):
-        return MathExpectation.get(arr)
+        self.out_val = MathExpectation.get(arr)
     
     @staticmethod
     def get(arr):
@@ -187,7 +187,7 @@ class NormalDistribution:
     """
     """
     def __init__(self, x, sigma, mu):
-        return NormalDistribution.get(x, sigma, mu)
+        self.out_val = NormalDistribution.get(x, sigma, mu)
     
     def get(x, sigma, mu):
         return 1 / ((sigma * math.sqrt(2*math.pi)) * pow(math.e, -(pow(x-mu, 2)/(2*pow(sigma, 2)))))
