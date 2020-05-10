@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Small library of helper functions for statistics.
+Small library of helper functions for statistics and probability theory.
 
 Includes classes:
     * Bernoulli
