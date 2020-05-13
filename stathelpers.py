@@ -65,6 +65,7 @@ class Bayes:
     """
     def __init__(self, ah_list, h_list):
         self.out_val = Bayes.get(ah_list, h_list)
+        self.full_probability = Bayes.get_ph(ah_list, h_list)
     
     @staticmethod
     def get(ah_list, h_list):
