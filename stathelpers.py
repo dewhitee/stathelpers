@@ -66,6 +66,7 @@ class Bayes:
     def __init__(self, ah_list, h_list):
         self.out_val = Bayes.get(ah_list, h_list)
         self.full_probability = Bayes.get_ph(ah_list, h_list)
+        self.equation_str = Bayes.eqstr(ah_list, h_list)
     
     @staticmethod
     def get(ah_list, h_list):
@@ -105,12 +106,27 @@ class Bayes:
     #        out.append((key * value) / key * value)
     #    return out
     
+    @staticmethod
+    def eqstr(ah_list, h_list):
+        """
+        ah_list -- list of probabilities of P(A|H) (can be any list of numerical values)
+        h_list -- list of total probabilities of P(H)
+        
+        returns list of (H|A) probabilities
+        """
+        for j in range(len(h_list)):
+            print("P(B"+str(j)+"|A"+str(j)+") = (P(B"+str(j)+")*P(A"+str(j)+"|B"+str(j)+"))/P(A"+str(j)+") = (" + str(h_list[j]) + "*" + str(ah_list[j]) + ") / " + str(Bayes.get_ph(ah_list, h_list))
+                  + ")" + " = " + str((h_list[j] * ah_list[j]) / Bayes.get_ph(ah_list, h_list)))
+    
 class Moivre:
     """
     Use this method if np > 9 and n > 20
     """
     def __init__(self, p, k, n):
         self.out_val = Moivre.get(p, k, n)
+        self.equation_str = Moivre.eqstr(p, k, n)
+        #self.equation_str_integral = Mouivre.eqstr_integral(p, k1, k2, n)
+        
     @staticmethod
     def x(p, k, n):
         return (k - n * p)/(math.sqrt(n*p*(1-p)))
@@ -121,15 +137,52 @@ class Moivre:
     def integral(p,k1,k2,n):
         return norm.cdf(Moivre.x(p,k2,n)) - norm.cdf(Moivre.x(p,k1,n))
     
+    @staticmethod
+    def eqstr(p, k, n):
+        equationstr = str()
+        equationstr += "1 / " + "sqrt(" + str(n) + '*' + str(p) + '*(1-' + str(p) + '))'
+        equationstr += " * φ(" + str(Moivre.x(p,k,n)) + ") = " + '1 / ' + str(math.sqrt(900*0.8*(1-0.8)))
+        equationstr += ' * ' + str(phi(Moivre.x(p, k, n)))
+        equationstr += ' = ' + str(Moivre.get(p, k, n))
+        return equationstr
+    
+    @staticmethod
+    def eqstr_x(p, k, n):
+        equationstr = str()
+        equationstr += 'x = (' + str(k) + '-' + str(n) + '*' + str(p)
+        equationstr += ' / sqrt(' + str(n) + '*' + str(p) + '* (1-' + str(p) + '))'
+        return equationstr
+    
+    @staticmethod
+    def eqstr_integral(p, k1, k2, n):
+        equationstr = str()
+        print('p =',p,'k1 =',k1,'k2 =',k2,'n =',n)
+        print('x1 =',Moivre.eqstr_x(p, k1, n))
+        print('x2 =',Moivre.eqstr_x(p, k2, n))
+        equationstr += "Ф(x2) - Ф(x1) = " 
+        equationstr += "Ф(" + str(Moivre.x(p, k2, n)) + ") - Ф(" + str(Moivre.x(p, k1, n)) + ")" + " = "
+        equationstr += str(norm.cdf(Moivre.x(p,k2,n))) + " - " + str(norm.cdf(Moivre.x(p,k1,n)))
+        equationstr += " = " + str(Moivre.integral(p,k1,k2,n))
+        return equationstr
 class Poisson:
     """
     Use this method if np < 9 and n > 20
     """
     def __init__(self, p, k, n):
         self.out_val = Poisson.get(p, k, n)
+        self.equation_str = Poisson.eqstr(p, k, n)
     
+    @staticmethod
     def get(p, k ,n):
         return ((pow((n*p),k) / math.factorial(k)) * pow(math.e, -n * p))
+    
+    @staticmethod
+    def eqstr(p, k, n):
+        equationstr = str()
+        print('P =', p, ', k =', k, ', n =', n)
+        equationstr += str('(' + str(n) + '*' + str(p) + ')^2 ')
+        equationstr += ' / ' + str(k) + '! * ' + str(math.e) + '^(' + str(-n) + ' * ' + str(p) + ')'
+        return equationstr + ' = ' + str(Poisson.get(p, k, n))
     
 # Random Variation
 class RandomVariation:
