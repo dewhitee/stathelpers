@@ -51,10 +51,21 @@ class Bernoulli:
     """
     def __init__(self, p, k, n):
         self.out_val = Bernoulli.get(p, k, n)
+        self.equation_str = Bernoulli.eqstr(p, k, n)
     
     @staticmethod
     def get(p, k, n):
         return C(k, n) * pow(p, k) * pow((1-p), n-k)
+    
+    @staticmethod
+    def eqstr(p, k, n):
+        print("p =",p,"k =",k,"n =",n)
+        equationstr = str()
+        equationstr += "C("+str(k)+","+str(n)+")"+" * "+str(round(p,4))+"^"+str(k)+" * "
+        equationstr += "(1-"+str(round(p,4))+")^("+str(n)+"-"+str(k)+")"
+        equationstr += " = " + str(C(k,n))+" * "+str(round(pow(p, k),4))+" * "+str(round(pow((1-p), n-k),4))
+        equationstr += " = " + str(round(Bernoulli.get(p,k,n),4))
+        return equationstr
     
 class Bayes:
     """ 
@@ -114,9 +125,22 @@ class Bayes:
         
         returns list of (H|A) probabilities
         """
+        print("Full probability =", Bayes.eqstr_ph(ah_list, h_list))
         for j in range(len(h_list)):
             print("P(B"+str(j)+"|A"+str(j)+") = (P(B"+str(j)+")*P(A"+str(j)+"|B"+str(j)+"))/P(A"+str(j)+") = (" + str(h_list[j]) + "*" + str(ah_list[j]) + ") / " + str(Bayes.get_ph(ah_list, h_list))
-                  + ")" + " = " + str((h_list[j] * ah_list[j]) / Bayes.get_ph(ah_list, h_list)))
+                  + " = " + str((h_list[j] * ah_list[j]) / Bayes.get_ph(ah_list, h_list)))
+    def eqstr_ph(ah_list, h_list):
+        """
+        ah_list -- list of probabilities of P(A|H) (can be any list of numerical values)
+        h_list -- list of total probabilities of P(H)
+        
+        returns full (total) probability of H
+        """
+        equationstr = str()
+        for j in range(len(h_list)):
+            equationstr += "(" + str(h_list[j]) + "*" + str(ah_list[j]) + ")" + " + "
+        equationstr = equationstr[:-3] + " = " + str(Bayes.get_ph(ah_list, h_list))
+        return equationstr
     
 class Moivre:
     """
@@ -139,6 +163,7 @@ class Moivre:
     
     @staticmethod
     def eqstr(p, k, n):
+        print("p =",p,"k =",k,"n =",n)
         equationstr = str()
         equationstr += "1 / " + "sqrt(" + str(n) + '*' + str(p) + '*(1-' + str(p) + '))'
         equationstr += " * φ(" + str(Moivre.x(p,k,n)) + ") = " + '1 / ' + str(math.sqrt(900*0.8*(1-0.8)))
