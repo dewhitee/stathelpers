@@ -169,6 +169,7 @@ class MathExpectation:
     """  
     def __init__(self, arr):
         self.out_val = MathExpectation.get(arr)
+        self.equation_str = MathExpectation.eqstr(arr)
     
     @staticmethod
     def get(arr):
@@ -183,6 +184,23 @@ class MathExpectation:
     @staticmethod
     def integral(a, b, func):
         return integrate.quad(lambda x: x * func(x), a, b)
+    
+    @staticmethod
+    def eqstr(arr):
+        """
+        arr -- must be an array of pairs, where first argument (key) is xi
+        and second (value) is P(X=xi) 
+        
+        returns the full equation string
+        """
+        sum = 0        
+        equationstr = str()
+        for key, value in arr.items():
+            sum += key*value
+            equationstr += str(key) + ' * ' + str(value) + ' + '
+        equationstr = equationstr[:-3]
+        equationstr += ' = ' + str(sum)
+        return equationstr
     
 class NormalDistribution:
     """
