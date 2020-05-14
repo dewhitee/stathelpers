@@ -136,7 +136,8 @@ class RandomVariation:
     """
     """
     def __init__(self, arr):
-        self.out_val = RandomVariation(arr)
+        self.out_val = RandomVariation.get(arr)
+        self.equation_str = RandomVariation.eqstr(arr)
     
     @staticmethod
     def get(arr):
@@ -153,16 +154,43 @@ class RandomVariation:
     def integral(arr, a, b, func):
         mx = MathExpectation.integral(a, b, func)[0]
         return integrate.quad(lambda x: pow(x-mx, 2)*func(x), a, b)
+    
+    @staticmethod
+    def eqstr(arr):
+        """
+        arr -- must be an array of pairs, where first argument (key) is xi
+        and second (value) is P(X=xi) 
+        
+        returns the full equation string
+        """
+        mx = MathExpectation.get(arr)
+        equationstr = str()
+        localeqstr = str()
+        sum = 0
+        print("M(X) = " + str(mx) + '; ')
+        for key, value in arr.items():
+            sum += pow(key-mx, 2) * value
+            equationstr += '(' + str(key) + '-' + str(mx) + ")^2 * " + str(value) + ' + '
+            localeqstr += str(pow(key-mx, 2) * value) + ' + '
+        equationstr = equationstr[:-3]
+        localeqstr = localeqstr[:-3]
+        equationstr += ' = ' + localeqstr + ' = ' + str(sum)
+        return equationstr
 
 class StandardDeviation:
     """
     """
     def __init__(self, arr):
         self.out_val = StandardDeviation.get(arr)
+        self.equation_str = StandardDeviation.eqstr(arr)
     
     @staticmethod
     def get(arr):
         return math.sqrt(RandomVariation.get(arr))
+    
+    @staticmethod
+    def eqstr(arr):
+        return str("σ(x) = sqrt(D(X)) = sqrt(" + str(RandomVariation.get(arr)) + ") = " + str(math.sqrt(RandomVariation.get(arr))))
 
 class MathExpectation:
     """
@@ -195,11 +223,14 @@ class MathExpectation:
         """
         sum = 0        
         equationstr = str()
+        localeqstr = str()
         for key, value in arr.items():
             sum += key*value
             equationstr += str(key) + ' * ' + str(value) + ' + '
+            localeqstr += str(key*value) + ' + '
         equationstr = equationstr[:-3]
-        equationstr += ' = ' + str(sum)
+        localeqstr = localeqstr[:-3]
+        equationstr += ' = ' + localeqstr + ' = ' + str(sum)
         return equationstr
     
 class NormalDistribution:
