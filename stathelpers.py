@@ -19,20 +19,53 @@ import math
 import scipy.integrate as integrate
 from scipy.stats import norm
 
+def prob(m, n):
+    return m/n
+
+def wes_prob(m, n):
+    print("m =",m,",  n =",n)
+    equationstr = "P=m/n="
+    equationstr += str(m)+"/"+str(n)+" \\approx "+str(round(m/n,4))
+    print(equationstr)
+
 def C(k, n):
-    return math.factorial(n) / (math.factorial(k) * math.factorial(n-k))
+    return int(math.factorial(n) / (math.factorial(k) * math.factorial(n-k)))
+
+def wes_C(k, n):
+    print("k =",k,",  n =",n)
+    equationstr = "C^"+str(k)+"_"+str(n)+"=n!/(k!*(n-k)!)="
+    equationstr += str(n)+"!"+"/("+str(k)+"!*("+str(n)+"-"+str(k)+")!)"
+    equationstr += "="+str(math.factorial(n))+"/("+str(math.factorial(k))+"*"+str(math.factorial(n-k))+")="+str(C(k,n))
+    print(equationstr)
 
 def A(k, n):
-    return math.factorial(n) / math.factorial(n-k)
+    return int(math.factorial(n) / math.factorial(n-k))
+
+def wes_A(k, n):
+    print("k =",k,",  n =",n)
+    equationstr = "A^"+str(k)+"_"+str(n)+"=n!/((n-k)!)="
+    equationstr += str(n)+"!"+"/(("+str(n)+"-"+str(k)+")!)"
+    equationstr += "="+str(math.factorial(n))+"/("+str(math.factorial(n-k))+")="+str(A(k,n))
+    print(equationstr)
 
 def P(n):
     return math.factorial(n)
+
+def wes_P(n):
+    print("n =",n)
+    print("P_"+str(n)+"=n!="+str(n)+"!"+"="+str(P(n)))
 
 def phi(x):
     return (1/(math.sqrt(2*math.pi)))*math.exp(-pow(x,2)/2)
 
 def ccc(k, K, n, N):
     return (C(k, K) * C(n - k, N - K)) / C(n, N)
+
+def wes_ccc(k, K, n, N):
+    print("k =",k,",  K =",K,",  n =",n,",  N =",N)
+    equationstr = "P=C^"+str(k)+"_"+str(K)+"*C^("+str(n)+"-"+str(k)+")_("+str(N)+"-"+str(K)+") /C^"+str(n)+"_"+str(N)
+    equationstr += "="+str(C(k,K))+"*"+str(C(n-k,N-K))+"/"+str(C(n,N))
+    print(equationstr+" \\approx "+str(round(ccc(k,K,n,N),4)))
     
 class Bernoulli:
     """
@@ -75,13 +108,14 @@ class Bernoulli:
         """
         Word document equation string
         """
-        print("p =",p,"k =",k,"n =",n)
-        equationstr = str()
+        print("p =",p,",  k =",k,",  n =",n)
+        equationstr = str("P{k=")+str(k)+"}="
+        equationstr += str("C^k_n p^k (1-p)^(n-k)=")
         equationstr += "C^"+str(k)+"_"+str(n)+" * "+str(round(p,4))+"^"+str(k)+" * "
         equationstr += "(1-"+str(round(p,4))+")^("+str(n)+"-"+str(k)+")"
-        equationstr += " = " + str(C(k,n))+" * "+str(round(pow(p, k),4))+" * "+str(round(pow((1-p), n-k),4))
-        equationstr += " = " + str(round(Bernoulli.get(p,k,n),4))
-        return equationstr
+        equationstr += "=" + str(C(k,n))+" * "+str(round(pow(p, k),4))+" * "+str(round(pow((1-p), n-k),4))
+        equationstr += " \\approx " + str(round(C(k,n)*round(pow(p, k),4)*round(pow((1-p), n-k),4),4))
+        print(equationstr)
     
 class Bayes:
     """ 
@@ -146,14 +180,22 @@ class Bayes:
             print("P(B"+str(j)+"|A"+str(j)+") = (P(B"+str(j)+")*P(A"+str(j)+"|B"+str(j)+"))/P(A"+str(j)+") = (" + str(h_list[j]) + "*" + str(ah_list[j]) + ") / " + str(Bayes.get_ph(ah_list, h_list))
                   + " = " + str((h_list[j] * ah_list[j]) / Bayes.get_ph(ah_list, h_list)))
             
-    def wes(ah_list, h_list):
+    def wes(ah_list, h_list, aindex = 0):
         """
         Word document equation string
         """
+        datastr_ah = str()
+        datastr_h = str()
+        for i in range(len(ah_list)):
+            datastr_ah += "P(A_"+str(aindex)+"|B_"+str(i)+")="+str(ah_list[i])+",  "
+        print(datastr_ah)
+        for i in range(len(h_list)):
+            datastr_h += "P(B_"+str(i)+")="+str(h_list[i])+",  "
+        print(datastr_h)
         Bayes.wes_ph(ah_list, h_list) # full probability
         for j in range(len(h_list)):
-            print("P(B_"+str(j)+"|A_"+str(j)+") = (P(B_"+str(j)+")*P(A_"+str(j)+"|B_"+str(j)+"))/P(A_"+str(j)+") = ("+str(h_list[j])+"*"+str(ah_list[j])+")/"+str(Bayes.get_ph(ah_list, h_list))
-                  +" = "+str((round((h_list[j]*ah_list[j])/Bayes.get_ph(ah_list, h_list),4))))
+            print("P(B_"+str(j)+"|A_"+str(aindex)+") = (P(B_"+str(j)+")*P(A_"+str(aindex)+"|B_"+str(j)+"))/P(A_"+str(aindex)+") = ("+str(h_list[j])+"*"+str(ah_list[j])+")/"+str(Bayes.get_ph(ah_list, h_list))
+                  +" \\approx "+str((round((h_list[j]*ah_list[j])/Bayes.get_ph(ah_list, h_list),4))))
 
     def es_ph(ah_list, h_list):
         """
@@ -168,8 +210,8 @@ class Bayes:
         equationstr = equationstr[:-3] + " = " + str(Bayes.get_ph(ah_list, h_list))
         return equationstr
     
-    def wes_ph(ah_list, h_list):
-        equationstr = str("P(A) = ")
+    def wes_ph(ah_list, h_list, aindex = 0):
+        equationstr = str("P(A_"+str(aindex)+") = ")
         for j in range(len(h_list)):
             equationstr += "("+str(h_list[j])+"*"+str(ah_list[j])+")"+"+"
         equationstr = equationstr[:-1] + " = " + str(Bayes.get_ph(ah_list, h_list))
@@ -196,7 +238,7 @@ class Moivre:
     
     @staticmethod
     def es(p, k, n):
-        print("p =",p,", k =",k,", n =",n)
+        print("p =",p,",  k =",k,",  n =",n)
         equationstr = str()
         equationstr += "1 / " + "sqrt(" + str(n) + '*' + str(p) + '*(1-' + str(p) + '))'
         equationstr += " * φ(" + str(Moivre.x(p,k,n)) + ") = " + '1 / ' + str(math.sqrt(900*0.8*(1-0.8)))
@@ -214,7 +256,7 @@ class Moivre:
     @staticmethod
     def es_integral(p, k1, k2, n):
         equationstr = str()
-        print('p =',p,', k1 =',k1,', k2 =',k2,', n =',n)
+        print('p =',p,',  k1 =',k1,',  k2 =',k2,',  n =',n)
         print('x1 =',Moivre.es_x(p, k1, n))
         print('x2 =',Moivre.es_x(p, k2, n))
         equationstr += "Ф(x2) - Ф(x1) = " 
@@ -225,25 +267,25 @@ class Moivre:
     
     @staticmethod
     def wes(p, k, n):
-        print("p =",p,", k =",k,", n =",n)
+        print("p =",p,",  k =",k,",  n =",n)
         equationstr = "P{k=" + str(k) + "} = 1/\sqrt(np(1-p))*φ(x) = "
         equationstr += "1/"+"\sqrt("+str(n)+'*'+str(p)+'*(1-'+str(p)+'))'
         equationstr += "*φ("+str(round(Moivre.x(p,k,n),4))+")="+'1/'+str(round(math.sqrt(900*0.8*(1-0.8)),4))
         equationstr += '*'+str(round(phi(Moivre.x(p, k, n)),4))
-        equationstr += ' = ' + str(round(Moivre.get(p, k, n),5))
+        equationstr += ' \\approx ' + str(round(Moivre.get(p, k, n),5))
         print(equationstr)
         
     @staticmethod
     def wes_integral(p, k1, k2, n):
         equationstr = str()
-        print('p =',p,', k_1 =',k1,', k_2 =',k2,', n =',n)
+        print('p =',p,',  k_1 =',k1,',  k_2 =',k2,',  n =',n)
         print('x_1 =',Moivre.wes_x(p, k1, n))
         print('x_2 =',Moivre.wes_x(p, k2, n))
         equationstr += "P{"+str(k1)+"<=k<="+str(k2)+"}="
         equationstr += "Ф(x_2)-Ф(x_1)=" 
         equationstr += "Ф("+str(round(Moivre.x(p, k2, n),4))+")-Ф("+str(round(Moivre.x(p, k1, n),4))+")"+" = "
         equationstr += str(round(norm.cdf(Moivre.x(p,k2,n)),4))+"-"+str(round(norm.cdf(Moivre.x(p,k1,n)),4))
-        equationstr += " = " + str(round(Moivre.integral(p,k1,k2,n),5))
+        equationstr += " \\approx " + str(round(Moivre.integral(p,k1,k2,n),5))
         print(equationstr)
         
     @staticmethod
@@ -277,12 +319,12 @@ class Poisson:
     @staticmethod
     def wes(p, k, n):
         equationstr = str()
-        print('p =', p, ', k =', k, ', n =', n)
+        print('p =', p, ',  k =', k, ',  n =', n)
         equationstr += "P_"+str(n)+" ("+str(k)+")="
         equationstr += str('('+str(n)+'*'+str(p)+')^2')
         equationstr += '/'+str(k)+'! *'+str(round(math.e,4))+'^('+str(-n)+'*'+str(p)+')'
-        equationstr += "="+str((pow((n*p),k) / math.factorial(k)))+"*"+str(round(pow(round(math.e,4),-n*p),4))
-        print(equationstr+'='+str(round((pow((n*p),k) / math.factorial(k)) * round(pow(round(math.e,4),-n*p),4),5)))
+        equationstr += "="+str(round((pow((n*p),k) / math.factorial(k)),5))+"*"+str(round(pow(round(math.e,4),-n*p),5))
+        print(equationstr+' \\approx '+str(round(round((pow((n*p),k) / math.factorial(k)),5) * round(pow(round(math.e,4),-n*p),5),5)))
     
 # Random Variation
 class RandomVariation:
@@ -347,7 +389,7 @@ class RandomVariation:
             localeqstr += str(round(pow(key-mx, 2)*value,5))+'+'
         equationstr = equationstr[:-1]
         localeqstr = localeqstr[:-1]
-        equationstr += '='+localeqstr+'='+str(round(sum,5))
+        equationstr += ' \\approx '+localeqstr+'='+str(round(sum,5))
         print(equationstr)
 
 class StandardDeviation:
@@ -421,7 +463,7 @@ class MathExpectation:
             localeqstr += str(round(key*value,5))+'+'
         equationstr = equationstr[:-1]
         localeqstr = localeqstr[:-1]
-        equationstr += '='+localeqstr+'='+str(round(sum,5))
+        equationstr += ' \\approx '+localeqstr+'='+str(round(sum,5))
         print(equationstr)
     
 class NormalDistribution:
