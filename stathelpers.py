@@ -268,9 +268,9 @@ class Moivre:
     @staticmethod
     def wes(p, k, n):
         print("p =",p,",  k =",k,",  n =",n)
-        equationstr = "P{k=" + str(k) + "} = 1/\sqrt(np(1-p))*φ(x) = "
+        equationstr = "P{k=" + str(k) + "} = 1/\sqrt(np(1-p)) φ(x) = "
         equationstr += "1/"+"\sqrt("+str(n)+'*'+str(p)+'*(1-'+str(p)+'))'
-        equationstr += "*φ("+str(round(Moivre.x(p,k,n),4))+")="+'1/'+str(round(math.sqrt(900*0.8*(1-0.8)),4))
+        equationstr += " φ("+str(round(Moivre.x(p,k,n),4))+")="+'1/'+str(round(math.sqrt(900*0.8*(1-0.8)),4))
         equationstr += '*'+str(round(phi(Moivre.x(p, k, n)),4))
         equationstr += ' \\approx ' + str(round(Moivre.get(p, k, n),5))
         print(equationstr)
@@ -320,7 +320,8 @@ class Poisson:
     def wes(p, k, n):
         equationstr = str()
         print('p =', p, ',  k =', k, ',  n =', n)
-        equationstr += "P_"+str(n)+" ("+str(k)+")="
+        print("P_n {X=k}=λ^k/k! e^-λ")
+        equationstr += "P_"+str(n)+" {X="+str(k)+"}=λ^k/k! e^-λ="
         equationstr += str('('+str(n)+'*'+str(p)+')^2')
         equationstr += '/'+str(k)+'! *'+str(round(math.e,4))+'^('+str(-n)+'*'+str(p)+')'
         equationstr += "="+str(round((pow((n*p),k) / math.factorial(k)),5))+"*"+str(round(pow(round(math.e,4),-n*p),5))
@@ -475,5 +476,75 @@ class NormalDistribution:
     def get(x, sigma, mu):
         return 1 / ((sigma * math.sqrt(2*math.pi)) * pow(math.e, -(pow(x-mu, 2)/(2*pow(sigma, 2)))))
     
+    def prob(mu, sigma, delta):
+        return norm.cdf(((mu+delta)-mu)/sigma)-norm.cdf(((mu-delta)-mu)/sigma)
+    
+    def wes_prob(mu, sigma, delta):
+        print("P-?,  μ =",mu,",  σ =",sigma,",  δ =",delta)
+        equationstr = "P{"+str(mu-delta)+"<x<"+str(mu+delta)+"}="
+        equationstr += "Ф((("+str(mu)+"+"+str(delta)+")-"+str(mu)+")/"+str(sigma)+")-"
+        equationstr += "Ф((("+str(mu)+"-"+str(delta)+")-"+str(mu)+")/"+str(sigma)+") ="
+        equationstr += "Ф(("+str(mu+delta)+"-"+str(mu)+")/"+str(sigma)+")-"
+        equationstr += "Ф(("+str(mu-delta)+"-"+str(mu)+")/"+str(sigma)+") ="
+        equationstr += "Ф("+str(((mu+delta)-mu)/sigma)+")-"+"Ф("+str(((mu-delta)-mu)/sigma)+") ="
+        equationstr += str(round(norm.cdf(((mu+delta)-mu)/sigma),5))+"-"+str(round(norm.cdf(((mu-delta)-mu)/sigma),5))+" \\approx "
+        equationstr += str(round(NormalDistribution.prob(mu,sigma,delta),4))
+        print(equationstr)
+    
+    def prob_interval(mu, sigma, k1, k2):
+        """
+        Use in case you have interval as P{k1 < x < k2}
         
+        Calculated as: Ф( (k2-mu)/sigma ) - Ф( (k1-mu)/sigma )
+        """
+        return norm.cdf((k2-mu)/sigma)-norm.cdf((k1-mu)/sigma)
+    
+    def wes_prob_interval(mu, sigma, k1, k2):
+        print("P-?,  μ =",mu,",  σ =",sigma,",  x_1 =",k1,",  x_2 =",k2)
+        equationstr = "P{"+str(k1)+"<x<"+str(k2)+"}="
+        equationstr += "Ф(("+str(k2)+"-"+str(mu)+")/"+str(sigma)+")-"
+        equationstr += "Ф(("+str(k1)+"-"+str(mu)+")/"+str(sigma)+") ="
+        equationstr += "Ф("+str(round((k2-mu)/sigma,5))+")-"+"Ф("+str(round((k1-mu)/sigma,5))+") ="
+        equationstr += str(round(norm.cdf((k2-mu)/sigma),4))+"-"+str(round(norm.cdf(((k1-mu)/sigma)),4))+" \\approx "
+        equationstr += str(round(NormalDistribution.prob_interval(mu,sigma,k1,k2),4))
+        print(equationstr)
+        
+    def prob_nmu(sigma, delta):
+        """
+        Use in case you have interval as P{mu - delta < x < mu + delta}
+        but the mu argument is undefined.
+        
+        Ccalculated as: Ф( delta/sigma ) - Ф( -delta/sigma )
+        """
+        return norm.cdf(delta/sigma)-norm.cdf(-delta/sigma)
+    
+    def wes_prob_nmu(sigma, delta):
+        """
+        @see NormalDistribution.prob_nmu(...)
+        """
+        print("P-?,  μ -?,  σ =",sigma,",  δ =",delta)
+        eqstr = "P{μ-"+str(delta)+"<x<μ+"+str(delta)+"}="
+        eqstr += "Ф((μ+"+str(delta)+"-μ)/"+str(sigma)+")-"
+        eqstr += "Ф((μ-"+str(delta)+"-μ)/"+str(sigma)+")="
+        eqstr += "Ф("+str(delta)+"/"+str(sigma)+")-"
+        eqstr += "Ф("+str(-delta)+"/"+str(sigma)+")="
+        eqstr += "Ф("+str(delta/sigma)+")-"
+        eqstr += "Ф("+str(-delta/sigma)+")="
+        eqstr += str(round(norm.cdf(delta/sigma),4))+"-"+str(round(norm.cdf(-delta/sigma),4))+"="
+        eqstr += str(round(NormalDistribution.prob_nmu(sigma,delta),4))
+        print(eqstr)
+    
+    def prob_ndelta(mu, sigma, k1, k2):
+        return NormalDistribution.prob_interval(mu, sigma, k1, k2)
+    
+    def prob_lesssigma(sigma, delta):
+        """
+        Use in case you need to calculate probability as P(|X-a| < sigma) = 2Ф(delta/sigma)
+        """
+        return
+    
+    
+    
+    
+    
     
