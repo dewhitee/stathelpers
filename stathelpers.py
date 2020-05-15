@@ -379,7 +379,7 @@ class RandomVariation:
         localeqstr = str()
         sum = 0
         print("M(X) = " + str(mx))
-        equationstr += "D(X) = "
+        equationstr += "D(X)=∑_(i=1)^n▒(x_i -M(X))^2 p_i="
         for key, value in arr.items():
             sum += pow(key-mx, 2) * value
             if mx < 0:
@@ -389,7 +389,7 @@ class RandomVariation:
             localeqstr += str(round(pow(key-mx, 2)*value,5))+'+'
         equationstr = equationstr[:-1]
         localeqstr = localeqstr[:-1]
-        equationstr += ' \\approx '+localeqstr+'='+str(round(sum,5))
+        equationstr += '='+localeqstr+' \\approx '+str(round(sum,5))
         print(equationstr)
 
 class StandardDeviation:
@@ -455,7 +455,7 @@ class MathExpectation:
     @staticmethod
     def wes(arr):
         sum = 0        
-        equationstr = str("M(X)=")
+        equationstr = "M(X)=∑_(i=1)^n▒x_i p_i="
         localeqstr = str()
         for key, value in arr.items():
             sum += round(key*value,5)
@@ -463,7 +463,7 @@ class MathExpectation:
             localeqstr += str(round(key*value,5))+'+'
         equationstr = equationstr[:-1]
         localeqstr = localeqstr[:-1]
-        equationstr += ' \\approx '+localeqstr+'='+str(round(sum,5))
+        equationstr += '='+localeqstr+' \\approx '+str(round(sum,5))
         print(equationstr)
     
 class NormalDistribution:
