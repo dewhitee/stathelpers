@@ -500,6 +500,14 @@ class NormalDistribution:
         return norm.cdf((k2-mu)/sigma)-norm.cdf((k1-mu)/sigma)
     
     def wes_prob_interval(mu, sigma, k1, k2):
+        #if k1 == +math.inf:
+        #    print("P-?,  μ =",mu,",  σ =",sigma,",  x_1 =+ \\infty ,","  x_2 =",k2)
+        #elif k1 == -math.inf:
+        #    print("P-?,  μ =",mu,",  σ =",sigma,",  x_1 =- \\infty ,","  x_2 =",k2)
+        #elif k2 == +math.inf:
+        #    print("P-?,  μ =",mu,",  σ =",sigma,",  x_1 =",k1,",  x_2 =+ \\infty")
+        #elif k2 == -math.inf:
+        #    print("P-?,  μ =",mu,",  σ =",sigma,",  x_1 =",k1,",  x_2 =- \\infty")
         print("P-?,  μ =",mu,",  σ =",sigma,",  x_1 =",k1,",  x_2 =",k2)
         equationstr = "P{"+str(k1)+"<x<"+str(k2)+"}="
         equationstr += "Ф(("+str(k2)+"-"+str(mu)+")/"+str(sigma)+")-"
@@ -511,7 +519,7 @@ class NormalDistribution:
         
     def prob_nmu(sigma, delta):
         """
-        Use in case you have interval as P{mu - delta < x < mu + delta}
+        Use in case you have an interval as P{mu - delta < x < mu + delta}
         but the mu argument is undefined.
         
         Ccalculated as: Ф( delta/sigma ) - Ф( -delta/sigma )
@@ -537,12 +545,18 @@ class NormalDistribution:
     def prob_ndelta(mu, sigma, k1, k2):
         return NormalDistribution.prob_interval(mu, sigma, k1, k2)
     
-    def prob_lesssigma(sigma, delta):
+    def prob_lsigma(sigma, delta):
         """
         Use in case you need to calculate probability as P(|X-a| < sigma) = 2Ф(delta/sigma)
         """
-        return
+        return 2*(norm.cdf(delta/sigma)-delta)
     
+    def wes_prob_lsigma(sigma, delta):
+        print("P-?,  μ -?,  σ =",sigma,",  δ =",delta)
+        eqstr = "P{|X-a|<"+str(delta)+"}=2Ф("+str(delta)+"/"+str(sigma)+")="
+        eqstr += "2Ф("+str(round(delta/sigma,5))+")=2*("+str(round(norm.cdf(delta/sigma),4))+"-"+str(delta)+")="
+        eqstr += str(round(NormalDistribution.prob_lsigma(sigma, delta),4))
+        print(eqstr)
     
     
     
