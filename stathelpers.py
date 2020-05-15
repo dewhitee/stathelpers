@@ -455,7 +455,13 @@ class MathExpectation:
     
     @staticmethod
     def wes(arr):
-        sum = 0        
+        """
+        arr -- must be an array of pairs, where first argument (key) is xi
+        and second (value) is P(X=xi) 
+        """
+        sum = 0
+        for index, key in enumerate(arr):
+            print("x_"+str(index)+"="+str(key)+"  ,P{X=x_"+str(index)+"}="+str(arr[key]))
         equationstr = "M(X)=∑_(i=1)^n▒x_i p_i="
         localeqstr = str()
         for key, value in arr.items():
@@ -493,7 +499,7 @@ class NormalDistribution:
     
     def prob_interval(mu, sigma, k1, k2):
         """
-        Use in case you have interval as P{k1 < x < k2}
+        Use in case you have an interval like P{k1 < x < k2}
         
         Calculated as: Ф( (k2-mu)/sigma ) - Ф( (k1-mu)/sigma )
         """
@@ -535,6 +541,10 @@ class NormalDistribution:
         print(eqstr)
     
     def prob_ndelta(mu, sigma, k1, k2):
+        """
+        Use this, or NormalDistribution.prob_interva(...) instead,
+        if you have an interval like P{k1 < x < k2}
+        """
         return NormalDistribution.prob_interval(mu, sigma, k1, k2)
     
     def prob_lsigma(sigma, delta):
