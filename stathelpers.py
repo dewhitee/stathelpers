@@ -215,8 +215,8 @@ class Moivre:
     def es_integral(p, k1, k2, n):
         equationstr = str()
         print('p =',p,', k1 =',k1,', k2 =',k2,', n =',n)
-        print('x1 =',Moivre.eqstr_x(p, k1, n))
-        print('x2 =',Moivre.eqstr_x(p, k2, n))
+        print('x1 =',Moivre.es_x(p, k1, n))
+        print('x2 =',Moivre.es_x(p, k2, n))
         equationstr += "Ф(x2) - Ф(x1) = " 
         equationstr += "Ф(" + str(Moivre.x(p, k2, n)) + ") - Ф(" + str(Moivre.x(p, k1, n)) + ")" + " = "
         equationstr += str(norm.cdf(Moivre.x(p,k2,n))) + " - " + str(norm.cdf(Moivre.x(p,k1,n)))
@@ -228,10 +228,31 @@ class Moivre:
         print("p =",p,", k =",k,", n =",n)
         equationstr = "P{k=" + str(k) + "} = 1/\sqrt(np(1-p))*φ(x) = "
         equationstr += "1/"+"\sqrt("+str(n)+'*'+str(p)+'*(1-'+str(p)+'))'
-        equationstr += "*φ("+str(round(Moivre.x(p,k,n),5))+")="+'1/'+str(round(math.sqrt(900*0.8*(1-0.8)),5))
-        equationstr += '*'+str(round(phi(Moivre.x(p, k, n)),5))
+        equationstr += "*φ("+str(round(Moivre.x(p,k,n),4))+")="+'1/'+str(round(math.sqrt(900*0.8*(1-0.8)),4))
+        equationstr += '*'+str(round(phi(Moivre.x(p, k, n)),4))
         equationstr += ' = ' + str(round(Moivre.get(p, k, n),5))
         print(equationstr)
+        
+    @staticmethod
+    def wes_integral(p, k1, k2, n):
+        equationstr = str()
+        print('p =',p,', k_1 =',k1,', k_2 =',k2,', n =',n)
+        print('x_1 =',Moivre.wes_x(p, k1, n))
+        print('x_2 =',Moivre.wes_x(p, k2, n))
+        equationstr += "P{"+str(k1)+"<=k<="+str(k2)+"}="
+        equationstr += "Ф(x_2)-Ф(x_1)=" 
+        equationstr += "Ф("+str(round(Moivre.x(p, k2, n),4))+")-Ф("+str(round(Moivre.x(p, k1, n),4))+")"+" = "
+        equationstr += str(round(norm.cdf(Moivre.x(p,k2,n)),4))+"-"+str(round(norm.cdf(Moivre.x(p,k1,n)),4))
+        equationstr += " = " + str(round(Moivre.integral(p,k1,k2,n),5))
+        print(equationstr)
+        
+    @staticmethod
+    def wes_x(p, k, n):
+        equationstr = str()
+        equationstr += '('+str(k)+'-'+str(n)+'*'+str(p)
+        equationstr += ')/\sqrt('+str(n)+'*'+str(p)+'*(1-'+str(p)+'))'
+        equationstr += " = "+str(round(Moivre.x(p,k,n),4))
+        return equationstr
     
 class Poisson:
     """
@@ -252,6 +273,16 @@ class Poisson:
         equationstr += str('(' + str(n) + '*' + str(p) + ')^2 ')
         equationstr += ' / ' + str(k) + '! * ' + str(math.e) + '^(' + str(-n) + ' * ' + str(p) + ')'
         return equationstr + ' = ' + str(Poisson.get(p, k, n))
+    
+    @staticmethod
+    def wes(p, k, n):
+        equationstr = str()
+        print('p =', p, ', k =', k, ', n =', n)
+        equationstr += "P_"+str(n)+" ("+str(k)+")="
+        equationstr += str('('+str(n)+'*'+str(p)+')^2')
+        equationstr += '/'+str(k)+'! *'+str(round(math.e,4))+'^('+str(-n)+'*'+str(p)+')'
+        equationstr += "="+str((pow((n*p),k) / math.factorial(k)))+"*"+str(round(pow(round(math.e,4),-n*p),4))
+        print(equationstr+'='+str(round((pow((n*p),k) / math.factorial(k)) * round(pow(round(math.e,4),-n*p),4),5)))
     
 # Random Variation
 class RandomVariation:
@@ -298,6 +329,26 @@ class RandomVariation:
         localeqstr = localeqstr[:-3]
         equationstr += ' = ' + localeqstr + ' = ' + str(sum)
         return equationstr
+    
+    @staticmethod
+    def wes(arr):
+        mx = round(MathExpectation.get(arr),5)
+        equationstr = str()
+        localeqstr = str()
+        sum = 0
+        print("M(X) = " + str(mx))
+        equationstr += "D(X) = "
+        for key, value in arr.items():
+            sum += pow(key-mx, 2) * value
+            if mx < 0:
+                equationstr += '('+str(round(key,5))+'-('+str(mx)+"))^2 *"+str(round(value,5))+'+'
+            else:
+                equationstr += '('+str(round(key,5))+'-'+str(mx)+")^2 *"+str(round(value,5))+'+'
+            localeqstr += str(round(pow(key-mx, 2)*value,5))+'+'
+        equationstr = equationstr[:-1]
+        localeqstr = localeqstr[:-1]
+        equationstr += '='+localeqstr+'='+str(round(sum,5))
+        print(equationstr)
 
 class StandardDeviation:
     """
@@ -313,6 +364,10 @@ class StandardDeviation:
     @staticmethod
     def es(arr):
         return str("σ(x) = sqrt(D(X)) = sqrt(" + str(RandomVariation.get(arr)) + ") = " + str(math.sqrt(RandomVariation.get(arr))))
+    
+    @staticmethod
+    def wes(arr):
+        print("σ(x)=\sqrt(D(X))=\sqrt("+str(round(RandomVariation.get(arr),4))+")="+str(round(math.sqrt(RandomVariation.get(arr)),4)))
 
 class MathExpectation:
     """
@@ -354,6 +409,20 @@ class MathExpectation:
         localeqstr = localeqstr[:-3]
         equationstr += ' = ' + localeqstr + ' = ' + str(sum)
         return equationstr
+    
+    @staticmethod
+    def wes(arr):
+        sum = 0        
+        equationstr = str("M(X)=")
+        localeqstr = str()
+        for key, value in arr.items():
+            sum += round(key*value,5)
+            equationstr += str(round(key,5))+'*'+str(round(value,5))+'+'
+            localeqstr += str(round(key*value,5))+'+'
+        equationstr = equationstr[:-1]
+        localeqstr = localeqstr[:-1]
+        equationstr += '='+localeqstr+'='+str(round(sum,5))
+        print(equationstr)
     
 class NormalDistribution:
     """
