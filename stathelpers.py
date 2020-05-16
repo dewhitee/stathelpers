@@ -10,6 +10,7 @@ Includes classes:
     * RandomVariation
     * StandardDeviation
     * MathExpectation
+    * GeomDistribution
     * NormalDistribution
 
 
@@ -21,6 +22,7 @@ Includes classes:
     from stathelpers import RandomVariation as rv
     from stathelpers import StandardDeviation as sd
     from stathelpers import MathExpectation as me
+    from stathelpers import GeomDistribution as gd
     from stathelpers import NormalDistribution as nd
 
     ---
@@ -486,6 +488,24 @@ class MathExpectation:
         localeqstr = localeqstr[:-1]
         equationstr += '='+localeqstr+' \\approx '+str(round(sum,5))
         print(equationstr)
+   
+class GeomDistribution:
+    """
+    """
+    def __init__(self, arr):
+        self.out_val = GeomDistribution.get(arr)
+        
+    @staticmethod
+    def get(p, k):
+        return pow(1 - p, k - 1)*p
+    
+    @staticmethod
+    def me(p):
+        return 1/p
+        
+    @staticmethod
+    def rv(p):
+        return (1-p)/pow(p, 2)
     
 class NormalDistribution:
     """
@@ -565,7 +585,7 @@ class NormalDistribution:
         """
         Use in case you need to calculate probability as P(|X-a| < sigma) = 2Ф(delta/sigma)
         """
-        return 2*(norm.cdf(delta/sigma)-delta)
+        return 2*(norm.cdf(delta/sigma))-1
     
     def wes_prob_lsigma(sigma, delta):
         print("P-?,  μ -?,  σ =",sigma,",  δ =",delta)
@@ -579,7 +599,7 @@ class NormalDistribution:
     
     def wes_prob_nsigma(percent, mu, x1, x2, x3, x4):
         print("p-?,  percent=",percent,",  μ(a)=",mu,",  σ-?,")
-        print("x_1=",x1,",  x_2=",x2,"  x_3=",x3,",  x_4=",x4)
+        print("x_1=",x1,",  x_2=",x2,",  x_3=",x3,",  x_4=",x4)
         
         r = (round(-1*(x2-mu),4)/percent) + (norm.cdf(norm.cdf(x1-mu))-(percent))
         
