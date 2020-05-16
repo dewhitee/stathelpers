@@ -564,13 +564,27 @@ class NormalDistribution:
         pass
     
     def wes_prob_nsigma(percent, mu, x1, x2, x3, x4):
-        print("p-?,  percent=",percent,",  μ(a)=",mu,",  σ-?,  x_1=",x1,",  x_2=",x2)
-        print("x_3=",x3,",  x_4=",x4)
-        eqstr = "P("+str(x1)+"<X<"+str(x2)+")=Ф(("+str(x2)+"-"+str(mu)+")/σ)-Ф(("+str(x1)+"-"+str(mu)+")/σ)="+str(percent)+",  "
-        eqstr += "Ф(("+str(x2-mu)+")/σ)-Ф(("+str(x1-mu)+")/σ)="+str(percent)+",  "
-        eqstr += "Ф(("+str(x2-mu)+")/σ)="+str(norm.cdf(norm.cdf(x1-mu)))+"-"+str(percent)+", "
-        eqstr += "Ф(("+str(x2-mu)+")/σ)="+str(norm.cdf(norm.cdf(x1-mu))-(percent))
-        eqstr += "#NEXT EQUATIONS ARE NOT IMPLEMENTED YET."
+        print("p-?,  percent=",percent,",  μ(a)=",mu,",  σ-?,")
+        print("x_1=",x1,",  x_2=",x2,"  x_3=",x3,",  x_4=",x4)
+        
+        r = (round(-1*(x2-mu),4)/percent) + (norm.cdf(norm.cdf(x1-mu))-(percent))
+        
+        print("P("+str(x1)+"<X<"+str(x2)+")=Ф(("+str(x2)+"-"+str(mu)+")/σ)-Ф(("+str(x1)+"-"+str(mu)+")/σ)="+str(percent)+",")
+        print("Ф(("+str(round(x2-mu,4))+")/σ)-Ф(("+str(x1-mu)+")/σ)="+str(percent)+",")
+        
+        x2mu = round(-1*(x2-mu),4)
+        print("-Ф(("+str(x2mu)+")/σ)="+str(norm.cdf(norm.cdf(x1-mu)))+"-"+str(percent)+",")
+        print("Ф(("+str(x2mu)+")/σ)="+str(norm.cdf(norm.cdf(x1-mu))-(percent)))
+        print(str(x2mu)+"/σ="+str(x2mu)+"/"+str(percent)+"+"+str(norm.cdf(norm.cdf(x1-mu))-(percent))+",")
+        print(str(x2mu)+"/σ="+str((x2mu/percent) + (norm.cdf(norm.cdf(x1-mu))-(percent))))
+        
+        sigma = round(x2mu/r,4)
+        print("σ \\approx "+str(sigma))
+        
+        print()
+        eqstr = "P("+str(x3)+"<x<"+str(x4)+")=Ф(("+str(x4)+"-"+str(mu)+")/"+str(sigma)+")-Ф(("+str(x3)+"-"+str(mu)+")/"+str(sigma)+")="
+        eqstr += "Ф("+str(round((x4-mu)/sigma,5))+")-Ф("+str(round((x3-mu)/sigma,5))+")="+str(round(norm.cdf((x4-mu)/sigma),4))+"-"+str(round(norm.cdf((x3-mu)/sigma),4))+"="
+        eqstr += " \\approx " + str(round(NormalDistribution.prob_interval(mu, sigma, x3, x4),4))
         print(eqstr)
     
     
