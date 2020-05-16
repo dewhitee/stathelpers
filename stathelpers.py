@@ -23,6 +23,10 @@ Includes classes:
     from stathelpers import MathExpectation as me
     from stathelpers import NormalDistribution as nd
 
+    ---
+    Each class has 'wes' (Word Equation String) method, that converts equation
+    of a choosen method into MS Word Document friendly string.
+
 @author: DEWHITEE
 """
 
