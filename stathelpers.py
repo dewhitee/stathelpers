@@ -12,6 +12,17 @@ Includes classes:
     * MathExpectation
     * NormalDistribution
 
+
+    import stathelpers as sh
+    from stathelpers import Bernoulli as bn
+    from stathelpers import Bayes as bs
+    from stathelpers import Moivre as m
+    from stathelpers import Poisson as p
+    from stathelpers import RandomVariation as rv
+    from stathelpers import StandardDeviation as sd
+    from stathelpers import MathExpectation as me
+    from stathelpers import NormalDistribution as nd
+
 @author: DEWHITEE
 """
 
@@ -194,7 +205,7 @@ class Bayes:
         print(datastr_h)
         Bayes.wes_ph(ah_list, h_list) # full probability
         for j in range(len(h_list)):
-            print("P(B_"+str(j)+"|A_"+str(aindex)+") = (P(B_"+str(j)+")*P(A_"+str(aindex)+"|B_"+str(j)+"))/P(A_"+str(aindex)+") = ("+str(h_list[j])+"*"+str(ah_list[j])+")/"+str(Bayes.get_ph(ah_list, h_list))
+            print("P(B_"+str(j)+"|A_"+str(aindex)+") = (P(B_"+str(j)+")*P(A_"+str(aindex)+"|B_"+str(j)+"))/P(A_"+str(aindex)+") = ("+str(h_list[j])+"*"+str(ah_list[j])+")/"+str(round(Bayes.get_ph(ah_list, h_list),5))
                   +" \\approx "+str((round((h_list[j]*ah_list[j])/Bayes.get_ph(ah_list, h_list),4))))
 
     def es_ph(ah_list, h_list):
@@ -214,7 +225,7 @@ class Bayes:
         equationstr = str("P(A_"+str(aindex)+") = ")
         for j in range(len(h_list)):
             equationstr += "("+str(h_list[j])+"*"+str(ah_list[j])+")"+"+"
-        equationstr = equationstr[:-1] + " = " + str(Bayes.get_ph(ah_list, h_list))
+        equationstr = equationstr[:-1] + " = " + str(round(Bayes.get_ph(ah_list, h_list),5))
         print(equationstr)
     
 class Moivre:
@@ -224,7 +235,6 @@ class Moivre:
     def __init__(self, p, k, n):
         self.out_val = Moivre.get(p, k, n)
         self.equation_str = Moivre.es(p, k, n)
-        #self.equation_str_integral = Mouivre.eqstr_integral(p, k1, k2, n)
         
     @staticmethod
     def x(p, k, n):
