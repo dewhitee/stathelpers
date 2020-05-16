@@ -560,7 +560,18 @@ class NormalDistribution:
         eqstr += str(round(NormalDistribution.prob_lsigma(sigma, delta),4))
         print(eqstr)
     
+    def prob_nsigma(percent, mu, k1, k2):
+        pass
     
+    def wes_prob_nsigma(percent, mu, x1, x2, x3, x4):
+        print("p-?,  percent=",percent,",  μ(a)=",mu,",  σ-?,  x_1=",x1,",  x_2=",x2)
+        print("x_3=",x3,",  x_4=",x4)
+        eqstr = "P("+str(x1)+"<X<"+str(x2)+")=Ф(("+str(x2)+"-"+str(mu)+")/σ)-Ф(("+str(x1)+"-"+str(mu)+")/σ)="+str(percent)+",  "
+        eqstr += "Ф(("+str(x2-mu)+")/σ)-Ф(("+str(x1-mu)+")/σ)="+str(percent)+",  "
+        eqstr += "Ф(("+str(x2-mu)+")/σ)="+str(norm.cdf(norm.cdf(x1-mu)))+"-"+str(percent)+", "
+        eqstr += "Ф(("+str(x2-mu)+")/σ)="+str(norm.cdf(norm.cdf(x1-mu))-(percent))
+        eqstr += "#NEXT EQUATIONS ARE NOT IMPLEMENTED YET."
+        print(eqstr)
     
     
     
