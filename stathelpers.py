@@ -22,6 +22,7 @@ Includes classes:
     from stathelpers import RandomVariation as rv
     from stathelpers import StandardDeviation as sd
     from stathelpers import MathExpectation as me
+    from stathelpers import BinomialDistribution as bd
     from stathelpers import GeomDistribution as gd
     from stathelpers import NormalDistribution as nd
 
@@ -80,8 +81,8 @@ def ccc(k, K, n, N):
 
 def wes_ccc(k, K, n, N):
     print("k =",k,",  K =",K,",  n =",n,",  N =",N)
-    equationstr = "P=C^"+str(k)+"_"+str(K)+"*C^("+str(n)+"-"+str(k)+")_("+str(N)+"-"+str(K)+") /C^"+str(n)+"_"+str(N)
-    equationstr += "="+str(C(k,K))+"*"+str(C(n-k,N-K))+"/"+str(C(n,N))
+    equationstr = "P=( C^"+str(k)+"_"+str(K)+"*C^("+str(n)+"-"+str(k)+")_("+str(N)+"-"+str(K)+") )/C^"+str(n)+"_"+str(N)
+    equationstr += "=("+str(C(k,K))+"*"+str(C(n-k,N-K))+")/"+str(C(n,N))
     print(equationstr+" \\approx "+str(round(ccc(k,K,n,N),4)))
     
 class Bernoulli:
@@ -488,7 +489,28 @@ class MathExpectation:
         localeqstr = localeqstr[:-1]
         equationstr += '='+localeqstr+' \\approx '+str(round(sum,5))
         print(equationstr)
-   
+  
+class BinomialDistribution:
+    """
+    """
+    def __init(self, p, k, n):
+        self.out_val = BinomialDistribution.get(p, k, n)
+        
+    def get(p, k, n):
+        return Bernoulli.get(p, k, n)
+    
+    def me(p, n):
+        return n*p
+    
+    def wes_me(p, n):
+        print("M(X)=np="+str(p)+str(n)+"="+str(p*n))
+    
+    def rv(p, n):
+        return n*p*(1-p)
+    
+    def wes_rv(p, n):
+        print("D(X)=np(1-p)="+str(n)+str(p)+"(1-"+str(p)+")="+str(n*p*(1-p)))
+    
 class GeomDistribution:
     """
     """
