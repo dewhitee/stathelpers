@@ -10,7 +10,9 @@ Includes classes:
     * RandomVariation
     * StandardDeviation
     * MathExpectation
+    * BinomialDistribution
     * GeomDistribution
+    * ExpDistribution
     * NormalDistribution
 
 
