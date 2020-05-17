@@ -24,6 +24,7 @@ Includes classes:
     from stathelpers import MathExpectation as me
     from stathelpers import BinomialDistribution as bd
     from stathelpers import GeomDistribution as gd
+    from stathelpers import ExpDistribution as ed
     from stathelpers import NormalDistribution as nd
 
     ---
@@ -574,7 +575,24 @@ class GeomDistribution:
     
     def wes_rv(p):
         print("D(X)=(1-p)/p^2=(1-"+str(p)+")/"+str(p)+"^2="+str(round(GeomDistribution.rv(p),4)))
+ 
+class ExpDistribution:
+    """
+    """
+    def __init__(self):
+        pass
     
+    def get(p, k, n, l = None):
+        if l is not None:
+            return pow(math.e, -l*k) if k >= 0 else 0
+        return pow(math.e, -(n*p)*k)
+    
+    def seq(l, minln = 1, maxln = 10):
+        return [ExpDistribution.get(None, i, maxln, l) for i in range(minln, maxln+1)]
+    
+    def draw_seq(l, minln = 1, maxln = 10):
+        plt.plot(ExpDistribution.seq(l, minln, maxln))
+ 
 class NormalDistribution:
     """
     """
