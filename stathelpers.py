@@ -105,7 +105,7 @@ class Bernoulli:
     
     """
     def __init__(self, p, k, n):
-        self.out_val = Bernoulli.get(p, k, n)
+        self.val = Bernoulli.get(p, k, n)
         self.equation_str = Bernoulli.es(p, k, n)
     
     @staticmethod
@@ -147,8 +147,8 @@ class Bayes:
     To get full (total) probability -- use get_ph(...) method.
     """
     def __init__(self, ah_list, h_list):
-        self.out_val = Bayes.get(ah_list, h_list)
-        self.full_probability = Bayes.get_ph(ah_list, h_list)
+        self.val = Bayes.get(ah_list, h_list)
+        self.fp = Bayes.get_ph(ah_list, h_list)
         self.equation_str = Bayes.es(ah_list, h_list)
     
     @staticmethod
@@ -244,7 +244,7 @@ class Moivre:
     Use this method if np > 9 and n > 20
     """
     def __init__(self, p, k, n):
-        self.out_val = Moivre.get(p, k, n)
+        self.val = Moivre.get(p, k, n)
         self.equation_str = Moivre.es(p, k, n)
         
     @staticmethod
@@ -262,7 +262,7 @@ class Moivre:
         print("p =",p,",  k =",k,",  n =",n)
         equationstr = str()
         equationstr += "1 / " + "sqrt(" + str(n) + '*' + str(p) + '*(1-' + str(p) + '))'
-        equationstr += " * φ(" + str(Moivre.x(p,k,n)) + ") = " + '1 / ' + str(math.sqrt(900*0.8*(1-0.8)))
+        equationstr += " * φ(" + str(Moivre.x(p,k,n)) + ") = " + '1 / ' + str(round(math.sqrt(n*p*(1-p)),4))
         equationstr += ' * ' + str(phi(Moivre.x(p, k, n)))
         equationstr += ' = ' + str(Moivre.get(p, k, n))
         return equationstr
@@ -287,17 +287,17 @@ class Moivre:
         return equationstr
     
     @staticmethod
-    def wes(p, k, n):
+    def wes(p, k, n, precision = 5):
         print("p =",p,",  k =",k,",  n =",n)
         equationstr = "P{k=" + str(k) + "} = 1/\sqrt(np(1-p)) φ(x) = "
-        equationstr += "1/"+"\sqrt("+str(n)+'*'+str(p)+'*(1-'+str(p)+'))'
-        equationstr += " φ("+str(round(Moivre.x(p,k,n),4))+")="+'1/'+str(round(math.sqrt(900*0.8*(1-0.8)),4))
+        equationstr += "1/"+"\sqrt("+str(n)+'*'+str(round(p,5))+'*(1-'+str(round(p,5))+'))'
+        equationstr += " φ("+str(round(Moivre.x(p,k,n),4))+")="+'1/'+str(round(math.sqrt(n*p*(1-p)),4))
         equationstr += '*'+str(round(phi(Moivre.x(p, k, n)),4))
-        equationstr += ' \\approx ' + str(round(Moivre.get(p, k, n),5))
+        equationstr += ' \\approx ' + str(round(Moivre.get(p, k, n),precision))
         print(equationstr)
         
     @staticmethod
-    def wes_integral(p, k1, k2, n):
+    def wes_integral(p, k1, k2, n, precision = 5):
         equationstr = str()
         print('p =',p,',  k_1 =',k1,',  k_2 =',k2,',  n =',n)
         print('x_1 =',Moivre.wes_x(p, k1, n))
@@ -306,7 +306,7 @@ class Moivre:
         equationstr += "Ф(x_2)-Ф(x_1)=" 
         equationstr += "Ф("+str(round(Moivre.x(p, k2, n),4))+")-Ф("+str(round(Moivre.x(p, k1, n),4))+")"+" = "
         equationstr += str(round(norm.cdf(Moivre.x(p,k2,n)),4))+"-"+str(round(norm.cdf(Moivre.x(p,k1,n)),4))
-        equationstr += " \\approx " + str(round(Moivre.integral(p,k1,k2,n),5))
+        equationstr += " \\approx " + str(round(Moivre.integral(p,k1,k2,n),precision))
         print(equationstr)
         
     @staticmethod
@@ -322,7 +322,7 @@ class Poisson:
     Use this method if np < 9 and n > 20
     """
     def __init__(self, p, k, n):
-        self.out_val = Poisson.get(p, k, n)
+        self.val = Poisson.get(p, k, n)
         self.equation_str = Poisson.es(p, k, n)
     
     @staticmethod
@@ -370,7 +370,7 @@ class RandomVariation:
     """
     """
     def __init__(self, arr):
-        self.out_val = RandomVariation.get(arr)
+        self.val = RandomVariation.get(arr)
         self.equation_str = RandomVariation.es(arr)
     
     @staticmethod
@@ -435,7 +435,7 @@ class StandardDeviation:
     """
     """
     def __init__(self, arr):
-        self.out_val = StandardDeviation.get(arr)
+        self.val = StandardDeviation.get(arr)
         self.equation_str = StandardDeviation.es(arr)
     
     @staticmethod
@@ -454,7 +454,7 @@ class MathExpectation:
     """
     """  
     def __init__(self, arr):
-        self.out_val = MathExpectation.get(arr)
+        self.val = MathExpectation.get(arr)
         self.equation_str = MathExpectation.es(arr)
     
     @staticmethod
@@ -515,16 +515,29 @@ class BinomialDistribution:
     """
     """
     def __init(self, p, k, n):
-        self.out_val = BinomialDistribution.get(p, k, n)
+        self.val = BinomialDistribution.get(p, k, n)
         
     def get(p, k, n):
         return Bernoulli.get(p, k, n)
+    
+    def check_sum(p, ln):
+        s = sum(BinomialDistribution.seq(p,ln))
+        print("Sum = ", s)
+        return round(s,4) == 1
     
     def seq(p, ln):
         """
         ln - length of a sequence
         """
         return [BinomialDistribution.get(p, i, ln) for i in range(ln+1)]
+    
+    def wes_seq(p, ln):
+        """
+        ln - length of a sequence
+        """
+        for i in range(ln+1):
+            print("P(X="+str(i)+")=C^"+str(i)+"_"+str(ln)+"*"+str(p)+"^"+str(i)+"*"+str(1-p)+"^"+str(i)+"="
+                  +str(C(i,ln))+"*"+str(round(pow(p,i),4))+"*"+str(round(pow(1-p,i),4))+"="+str(round(BinomialDistribution.get(p,i,ln),4)))
     
     def draw_seq(p, ln):
         """
@@ -549,7 +562,7 @@ class GeomDistribution:
     """
     """
     def __init__(self, arr):
-        self.out = GeomDistribution.get(arr)
+        self.val = GeomDistribution.get(arr)
 
     def get(p, k):
         return pow(1 - p, k - 1)*p
@@ -609,7 +622,7 @@ class NormalDistribution:
     """
     """
     def __init__(self, x, sigma, mu):
-        self.out_val = NormalDistribution.get(x, sigma, mu)
+        self.val = NormalDistribution.get(x, sigma, mu)
     
     def get(x, sigma, mu):
         return 1 / ((sigma * math.sqrt(2*math.pi)) * pow(math.e, -(pow(x-mu, 2)/(2*pow(sigma, 2)))))
