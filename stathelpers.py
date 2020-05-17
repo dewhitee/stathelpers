@@ -323,8 +323,25 @@ class Poisson:
         self.equation_str = Poisson.es(p, k, n)
     
     @staticmethod
-    def get(p, k ,n):
+    def get(p, k, n, l = None):
+        """
+        (optional) l = n*p
+        """
+        if l is not None:
+            return ((pow((l),k) / math.factorial(k)) * pow(math.e, -l))
+        
         return ((pow((n*p),k) / math.factorial(k)) * pow(math.e, -n * p))
+    
+    def seq(p, ln, l = None):
+        if l is not None:
+            return [Poisson.get(None, i, ln, l) for i in range(ln)]
+        return [Poisson.get(p, i, ln) for i in range(ln)]
+    
+    def draw_seq(p, ln, l = None):
+        if l is not None:
+            plt.plot(Poisson.seq(None, ln, l))
+        else:
+            plt.plot(Poisson.seq(p,ln))
     
     @staticmethod
     def es(p, k, n):
