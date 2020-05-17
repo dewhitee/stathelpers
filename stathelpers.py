@@ -592,6 +592,16 @@ class ExpDistribution:
     
     def draw_seq(l, minln = 1, maxln = 10):
         plt.plot(ExpDistribution.seq(l, minln, maxln))
+        
+    def me(p, n, l = None):
+        if l is not None:
+            return 1/l
+        return 1/(n*p)
+    
+    def rv(p, n, l = None):
+        if l is not None:
+            return 1/pow(l, 2)
+        return 1/pow(n*p, 2)
  
 class NormalDistribution:
     """
