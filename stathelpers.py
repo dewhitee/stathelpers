@@ -36,6 +36,7 @@ Includes classes:
 import math
 import scipy.integrate as integrate
 from scipy.stats import norm
+import matplotlib.pyplot as plt
 
 def prob(m, n):
     return m/n
@@ -499,6 +500,19 @@ class BinomialDistribution:
     def get(p, k, n):
         return Bernoulli.get(p, k, n)
     
+    def seq(p, ln):
+        """
+        ln - length of a sequence
+        """
+        return [BinomialDistribution.get(p, i, ln) for i in range(ln+1)]
+    
+    def draw_seq(p, ln):
+        """
+        ln - length of a sequence
+        """
+        plt.plot(BinomialDistribution.seq(p, ln))
+    
+    
     def me(p, n):
         return n*p
     
@@ -515,19 +529,34 @@ class GeomDistribution:
     """
     """
     def __init__(self, arr):
-        self.out_val = GeomDistribution.get(arr)
-        
-    @staticmethod
+        self.out = GeomDistribution.get(arr)
+
     def get(p, k):
         return pow(1 - p, k - 1)*p
-    
-    @staticmethod
+
+    def seq(p, ln):
+        """
+        ln - length of a sequence
+        """
+        return [GeomDistribution.get(p, i) for i in range(1, ln)]
+
+    def draw_seq(p, ln):
+        """
+        ln - length of a sequence
+        """
+        plt.plot(GeomDistribution.seq(p, ln))
+
     def me(p):
         return 1/p
-        
-    @staticmethod
+    
+    def wes_me(p):
+        print("M(X)=1/p=1/"+str(p)+"="+str(round(GeomDistribution.me(p),4)))
+
     def rv(p):
         return (1-p)/pow(p, 2)
+    
+    def wes_rv(p):
+        print("D(X)=(1-p)/p^2=(1-"+str(p)+")/"+str(p)+"^2="+str(round(GeomDistribution.rv(p),4)))
     
 class NormalDistribution:
     """
