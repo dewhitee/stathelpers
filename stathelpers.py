@@ -29,7 +29,7 @@ Includes classes:
     Each class has 'wes' (Word Equation String) method, that converts equation
     of a choosen method into MS Word Document friendly string.
 
-@author: DEWHITEE
+@author: dewhitee
 """
 
 import math
@@ -590,7 +590,7 @@ class NormalDistribution:
     def wes_prob_ldelta(sigma, delta):
         print("P-?,  μ -?,  σ =",sigma,",  δ =",delta)
         eqstr = "P{|X-a|<"+str(delta)+"}=2Ф("+str(delta)+"/"+str(sigma)+")="
-        eqstr += "2Ф("+str(round(delta/sigma,5))+")=2*("+str(round(norm.cdf(delta/sigma),4))+")-1 \\approx "
+        eqstr += "2Ф("+str(round(delta/sigma,5))+")=2*"+str(round(norm.cdf(delta/sigma),4))+"-1 \\approx "
         eqstr += str(round(NormalDistribution.prob_ldelta(sigma, delta),4))
         print(eqstr)
     
