@@ -581,17 +581,17 @@ class NormalDistribution:
         """
         return NormalDistribution.prob_interval(mu, sigma, k1, k2)
     
-    def prob_lsigma(sigma, delta):
+    def prob_ldelta(sigma, delta):
         """
         Use in case you need to calculate probability as P(|X-a| < sigma) = 2Ф(delta/sigma)
         """
         return 2*(norm.cdf(delta/sigma))-1
     
-    def wes_prob_lsigma(sigma, delta):
+    def wes_prob_ldelta(sigma, delta):
         print("P-?,  μ -?,  σ =",sigma,",  δ =",delta)
         eqstr = "P{|X-a|<"+str(delta)+"}=2Ф("+str(delta)+"/"+str(sigma)+")="
         eqstr += "2Ф("+str(round(delta/sigma,5))+")=2*("+str(round(norm.cdf(delta/sigma),4))+")-1 \\approx "
-        eqstr += str(round(NormalDistribution.prob_lsigma(sigma, delta),4))
+        eqstr += str(round(NormalDistribution.prob_ldelta(sigma, delta),4))
         print(eqstr)
     
     def prob_nsigma(percent, mu, k1, k2):
