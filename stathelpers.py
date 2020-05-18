@@ -289,9 +289,10 @@ class Moivre:
     @staticmethod
     def wes(p, k, n, precision = 5):
         print("p =",p,",  k =",k,",  n =",n)
-        equationstr = "P{k=" + str(k) + "} = 1/\sqrt(np(1-p)) φ(x) = "
+        print("x ="+str(Moivre.wes_x(p,k,n)))
+        equationstr = "P{k=" + str(k) + "} = 1/\sqrt(np(1-p))  φ(x) = "
         equationstr += "1/"+"\sqrt("+str(n)+'*'+str(round(p,5))+'*(1-'+str(round(p,5))+'))'
-        equationstr += " φ("+str(round(Moivre.x(p,k,n),4))+")="+'1/'+str(round(math.sqrt(n*p*(1-p)),4))
+        equationstr += "  φ("+str(round(Moivre.x(p,k,n),4))+")="+'1/'+str(round(math.sqrt(n*p*(1-p)),4))
         equationstr += '*'+str(round(phi(Moivre.x(p, k, n)),4))
         equationstr += ' \\approx ' + str(round(Moivre.get(p, k, n),precision))
         print(equationstr)
