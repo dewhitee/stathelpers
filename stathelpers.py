@@ -515,7 +515,7 @@ class MathExpectation:
 class BinomialDistribution:
     """
     """
-    def __init(self, p, k, n):
+    def __init__(self, p, k, n):
         self.val = BinomialDistribution.get(p, k, n)
         
     def get(p, k, n):
